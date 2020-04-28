@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org/">
+<head th:replace="fragments :: head">
+</head>
+<body>
+
+<div th:replace="fragments :: page-header"></div>
+
+<div class="container body-content">
+
+    <h1 th:text="${#strings.capitalizeWords(title)}"></h1>
+
+    <form th:action="@{/search/results}" method = "post">
+        <h2>Search by:</h2>
+
+        <p>
+            <span th:each="column : ${columns}">
+                <input
+                        type="radio"
+                        name="searchType"
+                        th:id="${column.key}"
+                        th:value="${column.key}"
+                        th:c
+                        th:checked="${(column.key=='all')}"/>
+                <label th:for="${column.key}" th:text="${column.value}"></label>
+            </span>
+
+        </p>
+
+        <p>
+            <label for="searchTerm">Keyword:</label>
+            <input type="text" name="searchTerm" id="searchTerm" />
+        </p>
+
+        <input type="submit" value="Search" />
+    </form>
+
+    <hr />
+
+    <!-- TODO #4 - Loop over the search results to display all job fields. -->
+    <th:block th:each = "t1 : ${title}">
+        <th:block  th:each = "job : ${jobs}">
+            <table class="job-listing">
+                <tr><td th:align="left" th:text="ID+': ' +${job.id}"></td></tr>
+                <tr><td th:align="left" th:text="Name+': ' +${job.name}"></td></tr>
+                <tr><td>Employer: <a th:href="@{/search/results(searchType='employer',searchTerm=${job.employer})}" th:text="${job.employer}"></a></td></tr>
+                <tr><td>Location: <a th:href="@{/search/results(searchType='location',searchTerm=${job.location})}" th:text="${job.location}"></a></td></tr>
+                <tr><td>Position Type: <a th:href="@{/search/results(searchType='positionType',searchTerm=${job.positionType})}" th:text="${job.positionType}"></a></td></tr>
+                <tr><td>Skill: <a th:href="@{/search/results(searchType='coreCompetency',searchTerm=${job.coreCompetency})}" th:text="${job.coreCompetency}"></a></td></tr>
+            </table>
+        </th:block>
+    </th:block>
+
+</div>
+
+</body>
+</html>
